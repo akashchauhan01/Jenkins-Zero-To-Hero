@@ -26,12 +26,20 @@ Pre-Requisites:
  - Java (JDK)
 
 ### Run the below commands to install Java and Jenkins
-
+**Below is for Ubuntu**
 Install Java
 
 ```
 sudo apt update
 sudo apt install openjdk-11-jre
+```
+**Below is for REHL**
+Install Java and Jenkins for REHL
+```
+sudo wget -O /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat/jenkins.repo
+sudo rpm --import https://pkg.jenkins.io/redhat/jenkins.io-2023.key
+yum install fontconfig java-17-openjdk
+yum install jenkins
 ```
 
 Verify Java is Installed
@@ -51,7 +59,12 @@ echo deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] \
 sudo apt-get update
 sudo apt-get install jenkins
 ```
-
+```
+Staring and Enabling Jenkins service
+sudo systemctl start jenkins
+sudo systemctl enable jenkins
+sudo systemctl status jenkins
+```
 **Note: ** By default, Jenkins will not be accessible to the external world due to the inbound traffic restriction by AWS. Open port 8080 in the inbound traffic rules as show below.
 
 - EC2 > Instances > Click on <Instance-ID>
@@ -108,11 +121,32 @@ Wait for the Jenkins to be restarted.
 ## Docker Slave Configuration
 
 Run the below command to Install Docker
-
+Ubuntu
 ```
 sudo apt update
 sudo apt install docker.io
 ```
+REHL
+```
+sudo yum remove docker \
+                  docker-client \
+                  docker-client-latest \
+                  docker-common \
+                  docker-latest \
+                  docker-latest-logrotate \
+                  docker-logrotate \
+                  docker-engine \
+                  podman \
+                  runc
+
+
+sudo yum install -y yum-utils
+sudo yum-config-manager --add-repo https://download.docker.com/linux/rhel/docker-ce.repo
+
+sudo yum install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+sudo systemctl start docker
+```
+
  
 ### Grant Jenkins user and Ubuntu user permission to docker deamon.
 
